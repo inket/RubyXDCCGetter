@@ -1,6 +1,6 @@
 require "singleton"
 
-class Logger
+class XLogger
   include Singleton
 
   attr_accessor :stdout
@@ -17,12 +17,12 @@ class Logger
     $stderr = STDOUT
     STDOUT.sync = true
 
-    Logger.instance.stdout = IO.new(IO.sysopen("/dev/tty", "a+"))
-    Logger.instance.stdout.sync = true
+    XLogger.instance.stdout = IO.new(IO.sysopen("/dev/tty", "a+"))
+    XLogger.instance.stdout.sync = true
   end
 
   def self.puts(str)
-    Logger.instance.stdout.puts(str)
+    XLogger.instance.stdout.puts(str)
   end
 
   def self.restore_output

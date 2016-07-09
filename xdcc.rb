@@ -1,5 +1,7 @@
+#!/usr/bin/env ruby
+
 require_relative "helper"
-require_relative "logger"
+require_relative "xlogger"
 require_relative "configuration"
 require_relative "bot"
 
@@ -12,7 +14,7 @@ else
   exit
 end
 
-Logger.switch_output(Config.log_file)
+XLogger.switch_output(Config.log_file)
 
 begin
   xdcc = XDCC.new(Config.server, Config.channel_name)
@@ -33,17 +35,17 @@ begin
     progress = info[:progress]
     speed = Helper.human_size(info[:speed])
 
-    Logger.puts "#{filename}: #{size}/#{total_size} (#{progress}%) - #{speed}/s"
+    XLogger.puts "#{filename}: #{size}/#{total_size} (#{progress}%) - #{speed}/s"
   end
 
-  Logger.puts "Finished download. Quitting..."
+  XLogger.puts "Finished download. Quitting..."
   xdcc.bot.quit
 
-  Logger.restore_output
+  XLogger.restore_output
 rescue Interrupt
-  Logger.restore_output
+  XLogger.restore_output
   puts "User cancelled download. Quitting..."
 rescue Exception => e
-  Logger.restore_output
+  XLogger.restore_output
   raise e
 end

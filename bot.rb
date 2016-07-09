@@ -1,5 +1,5 @@
 require_relative "helper"
-require_relative "logger"
+require_relative "xlogger"
 require "cinch"
 
 class XDCC
@@ -16,10 +16,10 @@ class XDCC
       end
     end
 
-    Logger.puts "Starting bot..."
+    XLogger.puts "Starting bot..."
     self.bot_thread = Thread.new(bot, &:start)
 
-    Logger.puts "Connecting..."
+    XLogger.puts "Connecting..."
 
     while bot.plugins.first.nil?
       sleep 1 # waiting for connection
@@ -41,7 +41,7 @@ class XDCCHandler
 
   listen_to :connect, method: :on_connect
   def on_connect(_m)
-    Logger.puts "Connected."
+    XLogger.puts "Connected."
     self.connected = true
     ask_for_dl
   end
@@ -51,11 +51,16 @@ class XDCCHandler
                   waiting_download &&
                   waiting_download[:requested].nil?
 
-    Logger.puts "Asking #{waiting_download[:user]} "\
+    XLogger.puts "Asking #{waiting_download[:user]} "\
                 "for download #{waiting_download[:file]}..."
 
     User(waiting_download[:user]).send("xdcc send #{waiting_download[:file]}")
     self.waiting_download[:requested] = true
+  end
+
+  listen_to :private, method: :on_msg
+  def on_msg(m)
+    XLogger.puts m.message
   end
 
   listen_to :dcc_send, method: :incoming_dcc
@@ -69,16 +74,16 @@ class XDCCHandler
       filesize = dcc.size
 
       if user == remote_user
-        Logger.puts "Received response:"
-        Logger.puts "*File: #{filename}"
-        Logger.puts "*Size: #{Helper.human_size(filesize)}\n\n"
+        XLogger.puts "Received response:"
+        XLogger.puts "*File: #{filename}"
+        XLogger.puts "*Size: #{Helper.human_size(filesize)}\n\n"
 
-        Logger.puts "Starting download..."
+        XLogger.puts "Starting download..."
 
         download_thread = create_download_thread(dcc, download_folder)
         progress_thread = create_progress_thread(download_thread)
 
-        Logger.puts "Download started."
+        XLogger.puts "Download started."
 
         self.download = {
           user: user,
@@ -91,7 +96,7 @@ class XDCCHandler
         self.waiting_download = nil
       end
     else
-      Logger.puts "Ignoring XDCC request from '#{dcc.user.nick}' as it is not expected."
+      XLogger.puts "Ignoring XDCC request from '#{dcc.user.nick}' as it is not expected."
     end
   end
 
@@ -107,7 +112,7 @@ class XDCCHandler
 
       t = File.open(save_path.to_s, "w")
       dcc.accept(t)
-      Logger.puts "Download finished."
+      XLogger.puts "Download finished."
       t.close
     end
   end
