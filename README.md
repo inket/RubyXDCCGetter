@@ -1,7 +1,7 @@
-###Ruby XDCC getter (name subject to change)
+### Ruby XDCC getter (name subject to change)
 
 ###### Required
-- Ruby >=1.9.1
+- Ruby
 - cinch (`gem install cinch`)
 
 ###### Usage
@@ -18,8 +18,8 @@
 > \*Join channel: #horriblesubs<br>
 > \*Download folder: /Users/inket/Downloads/<br>
 > \*Bot log file: /Users/inket/Desktop/output.log<br>
-> 
-> 
+>
+>
 > Starting bot...<br>
 > Connecting...<br>
 > Connected.<br>
@@ -27,7 +27,7 @@
 > Received response:<br>
 > \*File: MPC-HC.1.6.7.7114.x86.7z<br>
 > *Size: 6.24MB<br>
-> 
+>
 > Starting download...<br>
 > Download started.<br>
 > MPC-HC.1.6.7.7114.x86.7z: 0/6.24MB (0%) - 0/s<br>
